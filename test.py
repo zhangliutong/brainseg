@@ -111,24 +111,6 @@ if __name__ == "__main__":
                         type=str,
                         default='./CANDI',
                         help="data folder with training vols")
-
-    parser.add_argument("--n_iter",
-                        type=int,
-                        dest="n_iter",
-                        default=40000,
-                        help="number of iterations")
-    
-    parser.add_argument("--n_save_iter", 
-                        type=int,
-                        dest="n_save_iter", 
-                        default=5000,
-                        help="frequency of model saves")
-
-    parser.add_argument("--model_dir", 
-                        type=str,
-                        dest="model_dir", 
-                        default='CANDI_seg',
-                        help="models folder")
     
     args = parser.parse_args()
     args.label_mapping = [0, 16, 10, 49, 8, 47, 4, 43, 7, 46, 12, 51, 2, 41, 28, 60, 11, 50, 13, 52, 17, 53, 14, 15, 18, 54, 24, 3, 42]
