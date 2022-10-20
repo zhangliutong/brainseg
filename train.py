@@ -31,7 +31,7 @@ def train(args):
     train_gen = dataset.gen_register_batch()
 
     
-    model = Augnet(args.shape,normalization='batchnorm')
+    model = Augnet(args.shape)
     trf = SpatialTransformer(args.shape,'nearest')
     trf2 = SpatialTransformer(args.shape)
     model.train()
