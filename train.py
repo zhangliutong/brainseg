@@ -99,7 +99,7 @@ if __name__ == "__main__":
     parser.add_argument("--n_iter",
                         type=int,
                         dest="n_iter",
-                        default=10000,
+                        default=10001,
                         help="number of iterations")
     
     parser.add_argument("--n_save_iter", 
