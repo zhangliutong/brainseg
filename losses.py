@@ -45,24 +45,6 @@ def softmax_mse_loss(input_logits, target_logits):
     mse_loss = (input_softmax-target_softmax)**2
     return mse_loss.mean()
 
-
-def dice_loss(score, target):
-    target = target.float()
-    smooth = 1e-5
-    intersect = torch.sum(score * target)
-    y_sum = torch.sum(target * target)
-    z_sum = torch.sum(score * score)
-    loss = (2 * intersect + smooth) / (z_sum + y_sum + smooth)
-    loss = 1 - loss
-    return loss
-
-def multi_class_dice(score,target,n=36):
-    
-    all_loss = []
-    for i in range(1,n):
-        loss = dice_loss(score[:,i,:,:,:],target==i)
-        all_loss.append(loss)
-    return sum(all_loss)/(n-1)
     
 def ncc_loss(I, J, win=None):
     """
@@ -100,43 +82,6 @@ def ncc_loss(I, J, win=None):
     cc = cross*cross / (I_var*J_var + 1e-5)
 
     return -1 * torch.mean(cc)
-
-def ncc_sim(I, J, win=None):
-    """
-    calculate the normalize cross correlation between I and J
-    assumes I, J are sized [batch_size, *vol_shape, nb_feats]
-    """
-
-    ndims = len(list(I.size())) - 2
-    assert ndims in [1, 2, 3], "volumes should be 1 to 3 dimensions. found: %d" % ndims
-
-    if win is None:
-        win = [9] * ndims
-
-    conv_fn = getattr(F, 'conv%dd' % ndims)
-    I2 = I*I
-    J2 = J*J
-    IJ = I*J
-
-    sum_filt = torch.ones([1, 1, *win]).to("cuda")
-
-    pad_no = math.floor(win[0]/2)
-
-    if ndims == 1:
-        stride = (1)
-        padding = (pad_no)
-    elif ndims == 2:
-        stride = (1,1)
-        padding = (pad_no, pad_no)
-    else:
-        stride = (1,1,1)
-        padding = (pad_no, pad_no, pad_no)
-    
-    I_var, J_var, cross = compute_local_sums(I, J, sum_filt, stride, padding, win)
-
-    cc = cross*cross / (I_var*J_var + 1e-5)
-
-    return cc
 
 
 def compute_local_sums(I, J, filt, stride, padding, win):
